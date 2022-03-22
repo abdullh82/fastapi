@@ -7,6 +7,9 @@ from .routers import post,user,auth,vote
 from .config import settings
 # models.Base.metadata.create_all(bind=engine)
 from fastapi import FastAPI, File, UploadFile
+import os
+from os import walk
+
 
 app = FastAPI()
 
@@ -31,20 +34,24 @@ app.include_router(vote.router)
         
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    path=os.getcwd()
+    dir_list = os.listdir(path)
+    return {"message": dir_list}
 
 
 @app.post("/files/")
 async def create_file(file: bytes = File(...)):
     return {"file_size": len(file)}
 
-import os
+
 def save_file(filename, data):
     with open(filename, 'wb') as f:
         f.write(data)
+
+import os
 @app.post("/uploadfile/")
 async def upload(files: List[UploadFile] = File(...)):
-
+     
     # in case you need the files saved, once they are uploaded
     for file in files:
         contents = await file.read()
