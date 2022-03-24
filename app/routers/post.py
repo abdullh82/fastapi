@@ -30,6 +30,7 @@ async def create_post(post:schemas.PostCreate,db : Session=Depends(get_db),curre
     # new_post=cursor.fetchone()
     # conn.commit()
     #new_post=models.Post(title=post.title,content=post.content,published=post.published)
+    
     new_post=models.Post(owner_id=current_user.id,**post.dict())
     db.add(new_post)
     db.commit()
@@ -43,6 +44,7 @@ async def get_post(id:int,response:Response,db : Session=Depends(get_db),current
     # cursor.execute(F"select * from posts where id ={id}")
     # post=cursor.fetchone()
     # post=db.query(models.Post).filter(models.Post.id==id).first()
+   
     post=db.query(models.Post,func.count(models.Votes.post_id).label("vote")).join(models.Votes,models.Votes.post_id==models.Post.id,isouter=True).group_by(models.Post.id).filter(models.Post.id==id).first()
    
     if not post:
