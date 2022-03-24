@@ -34,9 +34,9 @@ app.include_router(vote.router)
         
 @app.get("/")
 async def root():
-    path=os.getcwd()
-    dir_list = os.listdir(path)
-    return {"message": dir_list}
+    # path=os.getcwd()
+    # dir_list = os.listdir(path)
+    return {"message": "hello"}
 
 
 @app.post("/files/")
